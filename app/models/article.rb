@@ -58,6 +58,14 @@ class Article < ApplicationRecord
     @image = nil
   end
 
+  def image_exists?
+    image.exists?
+  end
+
+  def image_url
+    image.url
+  end
+
   # Reading time estimation in minutes (assuming 200 words per min)
   def reading_time
     return 1 unless body.present?
