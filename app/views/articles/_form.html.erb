@@ -1,29 +1,47 @@
-<%= form_for(@article, html: {multipart: true}) do |f| %>
-    <ul>
-    <% @article.errors.full_messages.each do |error| %>
-        <li><%= error %></li>
-    <% end %>
-    </ul>
-    <p>
-        <%= f.label :title %><br />
-        <%= f.text_field :title %>
-    </p>
-    <p>
-        <%= f.label :body %><br />
-        <%= f.text_area :body %>
-    </p>
-    <p>
-        <%= f.label :tag_list %><br />
-        <%= f.text_field :tag_list %>
-    </p>
-    <p>
-        <% if @article.image.exists? %>
-            <%= image_tag @article.image.url %><br />
+<%= form_for(@article, html: { multipart: true, class: "editorial-form" }) do |f| %>
+  <% if @article.errors.any? %>
+    <div class="error-summary">
+      <h4>Please address the following <%= pluralize(@article.errors.count, "issue") %>:</h4>
+      <ul>
+        <% @article.errors.full_messages.each do |error| %>
+          <li><%= error %></li>
         <% end %>
-        <%= f.label :image, "Attach an Image" %><br />
-        <%= f.file_field :image %>
-    </p>
-    <p>
-        <%= f.submit %>
-    </p>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :title, "Article Title", class: "form-label" %>
+    <%= f.text_field :title, class: "form-control", placeholder: "e.g., The Silent Geometry of Brutalist Spaces" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :tag_list, "Topics & Tags", class: "form-label" %>
+    <%= f.text_field :tag_list, class: "form-control", placeholder: "e.g., Architecture, Design, Modernism (comma separated)" %>
+    <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 0.4rem;">Separate individual topics with commas.</span>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :image, "Hero Image Attachment", class: "form-label" %>
+    <% if @article.image_exists? %>
+      <div style="margin-bottom: 1rem; padding: 1rem; background: var(--bg-main); border-radius: var(--radius-sm); border: 1px dashed var(--border-color); display: flex; align-items: center; gap: 1rem;">
+        <%= image_tag @article.image_url, style: "width: 80px; height: 60px; object-fit: cover; border-radius: 4px;" %>
+        <div>
+          <div style="font-weight: 600; font-size: 0.85rem;">Current Attachment:</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);"><%= @article.image_file_name %></div>
+        </div>
+      </div>
+    <% end %>
+    <%= f.file_field :image, class: "form-control", style: "padding: 0.5rem;" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :body, "Perspective Body", class: "form-label" %>
+    <%= f.text_area :body, class: "form-control", placeholder: "Compose your essay or reflection here...", rows: 12 %>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+    <%= link_to "Cancel", articles_path, class: "btn btn-secondary" %>
+    <%= f.submit @article.new_record? ? "Publish Perspective" : "Update Perspective", class: "btn btn-primary" %>
+  </div>
 <% end %>

@@ -1,16 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Blogger</title>
+    <title>Blogger — Modern Editorial Publication</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A warm, modern editorial publication and blogging platform built with Ruby on Rails.">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' if defined?(Webpacker) && Webpacker.manifest.lookup("application.js") rescue nil %>
   </head>
 
   <body>
-    <p class="flash"><%= flash.notice %></p>
-    <%= yield %>
+    <header class="site-header">
+      <div class="nav-container">
+        <a href="<%= root_path %>" class="logo">Blogger<span>.</span></a>
+        
+        <ul class="nav-links">
+          <li><a href="<%= articles_path %>" class="nav-link <%= 'active' if controller_name == 'articles' && action_name == 'index' %>">Articles</a></li>
+          <li><a href="<%= tags_path %>" class="nav-link <%= 'active' if controller_name == 'tags' %>">Tags</a></li>
+          <li><a href="<%= new_article_path %>" class="btn btn-primary btn-sm">+ Write Article</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <%= form_tag articles_path, method: :get, class: "search-form" do %>
+            <%= text_field_tag :query, params[:query], class: "search-input", placeholder: "Search articles or topics..." %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <% if flash[:notice].present? || flash[:alert].present? %>
+      <div class="flash-container">
+        <% if flash[:notice].present? %>
+          <div class="flash-message flash-notice">
+            <span><%= flash[:notice] %></span>
+          </div>
+        <% end %>
+        <% if flash[:alert].present? %>
+          <div class="flash-message flash-alert">
+            <span><%= flash[:alert] %></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <main class="main-container">
+      <%= yield %>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="footer-logo">Blogger.</div>
+        <p>A sophisticated editorial publication platform designed with human-centered warm aesthetics.</p>
+        <p>&copy; <%= Time.current.year %> Blogger Project. Crafted with care and security in Rails.</p>
+      </div>
+    </footer>
   </body>
 </html>

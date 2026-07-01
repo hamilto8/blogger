@@ -1,20 +1,67 @@
-<h1><%= @article.title %></h1>
-<p>
-    Tags:
-    <% @article.tags.each do |tag| %>
-        <%= link_to tag.name, tag_path(tag) %>
+<div class="article-read-container">
+  <div style="margin-bottom: 1.5rem;">
+    <%= link_to "&larr; Back to Perspectives".html_safe, articles_path, style: "color: var(--text-muted); font-size: 0.9rem; font-weight: 500;" %>
+  </div>
+
+  <h1 class="article-hero-title"><%= @article.title %></h1>
+
+  <div class="article-read-meta">
+    <div class="author-byline">
+      <div class="author-avatar">E</div>
+      <div>
+        <div>Editorial Team</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;"><%= @article.created_at.strftime("%B %d, %Y") %> &bull; <%= @article.reading_time %> min read</div>
+      </div>
+    </div>
+  </div>
+
+  <% if @article.image_exists? %>
+    <div style="margin: 2rem 0;">
+      <%= image_tag @article.image_url, class: "article-hero-image", alt: @article.title %>
+    </div>
+  <% end %>
+
+  <div class="article-body-text">
+    <%= simple_format(@article.body) %>
+  </div>
+
+  <% if @article.tags.any? %>
+    <div style="margin: 2.5rem 0; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+      <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-right: 0.75rem;">Tagged:</span>
+      <div style="display: inline-flex; gap: 0.5rem; flex-wrap: wrap; vertical-align: middle;">
+        <% @article.tags.each do |tag| %>
+          <%= link_to tag.name, tag_path(tag), class: "tag-badge" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="article-actions-bar">
+    <div>
+      <%= link_to "&larr; All Perspectives".html_safe, articles_path, class: "btn btn-secondary btn-sm" %>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <%= link_to "Edit Article", edit_article_path(@article), class: "btn btn-secondary btn-sm" %>
+      <%= link_to "Delete", article_path(@article), method: :delete, data: { confirm: "Are you certain you wish to remove this perspective?" }, class: "btn btn-danger btn-sm" %>
+    </div>
+  </div>
+
+  <section class="comments-section">
+    <h3 class="comments-title">Discussion (<%= @article.comments.size %>)</h3>
+    
+    <% if @article.comments.any? %>
+      <div class="comment-list">
+        <%= render partial: 'articles/comment', collection: @article.comments.order(created_at: :asc) %>
+      </div>
+    <% else %>
+      <div style="padding: 2.5rem; text-align: center; background: var(--bg-main); border-radius: var(--radius-md); border: 1px dashed var(--border-color); margin-bottom: 2rem;">
+        <p style="color: var(--text-muted); font-style: italic;">No thoughts have been shared yet. Start the conversation below.</p>
+      </div>
     <% end %>
-</p>
-<% if @article.image.exists? %>
-<p><%= image_tag @article.image.url %></p>
-<% end %>
 
-<p><%= @article.body %></p>
-
-<h3>Comments (<%= @article.comments.size %>)</h3>
-<%= render partial: 'articles/comment', collection: @article.comments %>
-<%= render partial: 'comments/form' %>
-
-<%= link_to "<< Back to Articles List", articles_path %>
-<%= link_to "edit", edit_article_path(@article) %>
-<%= link_to "delete", article_path(@article), method: :delete, data: {confirm: "Really delete the article?"} %>
+    <div class="comment-form-card">
+      <h4 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 1.25rem; color: var(--text-primary);">Share Your Thought</h4>
+      <%= render partial: 'comments/form' %>
+    </div>
+  </section>
+</div>

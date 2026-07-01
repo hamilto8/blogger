@@ -1,14 +1,26 @@
-<h3>Post a comment<h3>
-<%= form_for [ @article, @comment] do |f| %>
-    <p>
-        <%= f.label :author_name, "Your name" %><br />
-        <%= f.text_field :author_name %>
-    </p>
-    <p>
-        <%= f.label :body, "Your comment" %><br />
-        <%= f.text_area :body %>
-    </p>
-    <p>
-        <%= f.submit 'Submit' %>
-    </p>
+<%= form_for [ @article, @comment ] do |f| %>
+  <% if @comment.errors.any? %>
+    <div class="error-summary">
+      <h4>Unable to post thought:</h4>
+      <ul>
+        <% @comment.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :author_name, "Your Name", class: "form-label" %>
+    <%= f.text_field :author_name, class: "form-control", placeholder: "e.g., Elena Vance" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :body, "Your Thought or Reflection", class: "form-label" %>
+    <%= f.text_area :body, class: "form-control", placeholder: "Share your perspective on this piece...", rows: 4, style: "min-height: 120px;" %>
+  </div>
+
+  <div style="margin-top: 1.5rem;">
+    <%= f.submit 'Post Thought', class: "btn btn-sage" %>
+  </div>
 <% end %>

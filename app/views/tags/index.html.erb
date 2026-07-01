@@ -1,9 +1,21 @@
-<h1>All Tags</h1>
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Topic Directory</h1>
+    <p class="page-subtitle">Explore perspectives organized by theme, discipline, and subject matter.</p>
+  </div>
+</div>
 
-<ul id="tags">
+<% if @tags.empty? %>
+  <div style="text-align: center; padding: 4rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+    <p style="color: var(--text-muted); font-style: italic;">No topics have been indexed yet.</p>
+  </div>
+<% else %>
+  <div class="tags-cloud">
     <% @tags.each do |tag| %>
-        <li>
-            <%= link_to tag.name, tag_path(tag) %>
-        </li>
+      <%= link_to tag_path(tag), class: "tag-cloud-item" do %>
+        <span>#<%= tag.name %></span>
+        <span class="tag-count"><%= tag.articles.count %></span>
+      <% end %>
     <% end %>
-</ul>
+  </div>
+<% end %>
