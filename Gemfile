@@ -7,6 +7,9 @@ ruby '>= 2.5.0'
 gem 'rails', '~> 6.0.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '~> 1.4'
+# Apple Silicon & Modern OS Compatibility Fixes
+gem 'ffi', '~> 1.15.0'
+gem 'mimemagic', '~> 0.3.10'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
